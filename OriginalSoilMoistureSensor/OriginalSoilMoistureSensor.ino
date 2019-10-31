@@ -13,82 +13,65 @@ Modified by: Matthew Hamilton
 Date Modified: Oct.29, 2019
 */
 
-int ledGreen1 = 3;
-int ledRed1 = 2;
-int ledGreen2 = 5;
-int ledRed2 = 4;
+int const SENSOR_AMT = 2;
 
-int soilMoistureSensor1 = A0;
-int soilMoistureSensor2 = A1;
+int greenLEDS[] = {3, 5};
+int redLEDS[] = {2, 4};
+int moistureSensorPins[] = {A0, A1}; // soil moisture sensor pins
+int validSensorReadings[] = {0, 0};   // valid sensor analog reading to record
+int sensorResults[] = {0, 0};         // scaled sensor data [0..3] = [wet, damp, moist, dry]
 
 const int wetProbe      = 300;   // wet readings are around 1.5v or analog input value ~300
-const int dryProbe      = 620;   // dry readings are around   3v or analog input value ~620
-int validSensorReading1  = 0;    // valid sensor analog reading to record
-int validSensorReading2  = 0;
-int sensorResult1;               // scaled sensor data [0..3] = [wet, damp, moist, dry]
-int sensorResult2;               // scaled sensor data [0..3] = [wet, damp, moist, dry]
+const int dryProbe      = 620;   // dry readings are around 3v or analog input value ~620
 
 void setup() {
 
   Serial.begin(9600);
-  pinMode(ledGreen1, OUTPUT);
-  pinMode(ledRed1, OUTPUT);
-  pinMode(ledGreen2, OUTPUT);
-  pinMode(ledRed2, OUTPUT);
+
+  for(int i = 0; i < SENSOR_AMT; i++){
+  
+    pinMode(greenLEDS[i], OUTPUT);
+    pinMode(redLEDS[i], OUTPUT);
+
+  }
 
 }
 
 void loop() {
- 
-  int moistureValue1 = analogRead(soilMoistureSensor1);
-  int moistureValue2 = analogRead(soilMoistureSensor2);
 
-  Serial.println(moistureValue1);
-  Serial.println(moistureValue2);
+  for(int i = 0; i < SENSOR_AMT; i++){
 
-  //If there is a difference
-  if (abs(validSensorReading1 - moistureValue1) > 10) {
-    validSensorReading1 = moistureValue1;
-  }
-
-  if (abs(validSensorReading2 - moistureValue2) > 10) {
-    validSensorReading2 = moistureValue2;
-  }
-
-  sensorResult1 = map(validSensorReading1, wetProbe, dryProbe, 0, 4);  // scale analog input to a smaller range for wet to dry
-  sensorResult2 = map(validSensorReading2, wetProbe, dryProbe, 0, 4);
-
-  //Output values to Serial Log
-  Serial.print("Sensor 1: ");
-  DisplaySensorResult(sensorResult1);
-  Serial.print("Sensor 2: ");
-  DisplaySensorResult(sensorResult2);
-
-  //Change LED colours
-  if(sensorResult1 >= 2){
-
-    digitalWrite(ledGreen1, LOW);
-    digitalWrite(ledRed1, HIGH);
+    int moistureValue = analogRead(moistureSensorPins[i]);
+    Serial.println(moistureValue);
+  
+    //If there is a difference
+    if (abs(validSensorReadings[i] - moistureValue) > 10) {
+      validSensorReadings[i] = moistureValue;
+    }
     
-  }else{
+    sensorResults[i] = map(validSensorReadings[i], wetProbe, dryProbe, 0, 4);  // scale analog input to a smaller range for wet to dry
+  
+    //Output values to Serial Log
+    Serial.print("Sensor  ");
+    Serial.print(i);
+    Serial.print(": ");
+    DisplaySensorResult(sensorResults[i]);
+  
+    //Change LED colours
+    if(sensorResults[i] >= 2){
+  
+      digitalWrite(greenLEDS[i], LOW);
+      digitalWrite(redLEDS[i], HIGH);
+      
+    }else{
+  
+      digitalWrite(greenLEDS[i], HIGH);
+      digitalWrite(redLEDS[i], LOW);
+      
+    }
 
-    digitalWrite(ledGreen1, HIGH);
-    digitalWrite(ledRed1, LOW);
-    
   }
-
-   if(sensorResult2 >= 2){
-
-    digitalWrite(ledGreen2, LOW);
-    digitalWrite(ledRed2, HIGH);
-    
-  }else{
-
-    digitalWrite(ledGreen2, HIGH);
-    digitalWrite(ledRed2, LOW);
-    
-  }
-
+  
   delay(500);
 
 }
