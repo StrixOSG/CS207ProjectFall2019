@@ -1,9 +1,23 @@
 /*
 
+Project Summary:
 This program will read the analog moisture level of
 2 capactive soil moisture sensors, and output whether 
 it's dry, moist, damp, or wet.
- 
+
+Project Idea & Components From: 
+Jeff Bishop (Eli The Computer Guy)
+
+Parts:
+- 4 x LEDs (2 green, 2 red)
+- 4 x 220ohm resistors
+- 2 x Soil moisture sensors
+
+Connections: 
+- Green LEDs on pins 3 and 5
+- Red LEDs on pins 2 and 4
+- Soil moisture sensors on pins A0 and A1
+
 Some code copied from: 
 https://github.com/GadgetReboot/Arduino/blob/master/Uno/SSD1306_Soil_Meter/SSD1306_Soil_Meter.in
 Code by GitHub user: GadgetReboot
@@ -39,6 +53,7 @@ void setup() {
 
 void loop() {
 
+  //Do this for both soil moisture sensors and pairs of LEDs
   for(int i = 0; i < SENSOR_AMT; i++){
 
     int moistureValue = analogRead(moistureSensorPins[i]);
