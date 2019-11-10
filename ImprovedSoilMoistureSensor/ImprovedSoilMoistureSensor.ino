@@ -101,8 +101,8 @@ Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 
 const int SOIL_SENSOR_AMT = 2;
 const int SOIL_SENSOR_PINS[] = {A6, A7};  // soil moisture sensor pins
-int validSensorReadings[] = {0, 0};           // valid sensor analog reading to record
-int sensorResults[] = {0, 0};                 // scaled sensor data [0..3] = [wet, damp, moist, dry]
+int validSoilSensorReadings[] = {0, 0};           // valid sensor analog reading to record
+int soilSensorResults[] = {0, 0};                 // scaled sensor data [0..3] = [wet, damp, moist, dry]
 
 const int wetProbe      = 300;                // wet readings are around 1.5v or analog input value ~300
 const int dryProbe      = 620;                // dry readings are around 3v or analog input value ~620
@@ -117,6 +117,8 @@ const int dryProbe      = 620;                // dry readings are around 3v or a
 #define TH_TYPE DHT11
 
 DHT dht(TH_PIN, TH_TYPE);
+
+float humidity, celcius, fahrenheit, heatIndexC, heatIndexF;
 
 /////////////////////    END TEMPERATURE & HUMIDITY SENSORS   ////////////////////
 
@@ -177,14 +179,94 @@ void SetupTouchscreen(){
 
   tft.begin(identifier);
   
+  //Portrait
+  tft.setRotation(2);
+
+  //Screen background color
+  tft.fillScreen(BLACK);
+  
 }
 
 void loop() {
 
-  SoilSensor();
-  THSensor();
+  GetSoilMoistureSensorData();
+  GetTHSensorData();
   //TestServo();
+  DisplayDataOnTouchScreen();
 
+}
+
+void DisplayDataOnTouchScreen(){
+
+  tft.setCursor(0, 0);
+  tft.setTextColor(BLUE, BLACK);
+  tft.setTextSize(2);
+  DisplaySoilMoistureData();
+  tft.println("\n");
+  tft.setTextColor(WHITE, BLACK);
+  DisplayHumidityData();
+  DisplayTempData();
+  
+}
+
+void DisplaySoilMoistureData(){
+
+  tft.println("Moisture Sensors: ");
+
+  for(int i = 0; i < SOIL_SENSOR_AMT; i++){
+  
+    //Output values to Serial Log
+    tft.print(F("Sensor  "));
+    tft.print(i + 1);
+    tft.print(F(": "));
+    DisplaySoilSensorResultOnScreen(soilSensorResults[i]);
+
+  }
+  
+}
+
+void DisplayTempData(){
+
+  tft.print("Temperature: ");
+  DisplayCelcius();
+  //DisplayFahrenheit();
+  
+}
+
+void DisplayCelcius(){
+
+  tft.print(celcius);
+  tft.print((char)247); //Degrees symbol
+  tft.println("C ");
+  
+}
+
+void DisplayFahrenheit(){
+
+  tft.print(fahrenheit);
+  tft.print((char)247); //Degrees symbol
+  tft.println("F");
+  
+}
+
+void DisplayHumidityData(){
+
+  tft.print("Humidity: ");
+  tft.print(humidity);
+  tft.println("% ");
+  
+}
+
+void DisplayHeatIndexData(){
+  
+  tft.print("Heat index: ");
+  tft.print(heatIndexC);
+  tft.print((char)247); //Degrees symbol
+  tft.println("C ");
+  tft.print(heatIndexF);
+  tft.print((char)247); //Degrees symbol
+  tft.println("F");
+  
 }
 
 void TestServo(){
@@ -204,11 +286,11 @@ void TestServo(){
   
 }
 
-void THSensor(){
+void GetTHSensorData(){
 
-  float humidity = dht.readHumidity();
-  float celcius = dht.readTemperature();
-  float fahrenheit = dht.readTemperature(true);
+  humidity = dht.readHumidity();
+  celcius = dht.readTemperature();
+  fahrenheit = dht.readTemperature(true);
 
    if (isnan(humidity) || isnan(celcius) || isnan(fahrenheit)) {
     
@@ -217,10 +299,10 @@ void THSensor(){
     
   }
 
-  float heatIndexC = dht.computeHeatIndex(celcius, humidity, false);
-  float heatIndexF = dht.computeHeatIndex(fahrenheit, humidity);
+  heatIndexC = dht.computeHeatIndex(celcius, humidity, false);
+  heatIndexF = dht.computeHeatIndex(fahrenheit, humidity);
 
-  Serial.print(F("Humidity: "));
+  /*Serial.print(F("Humidity: "));
   Serial.print(humidity);
   Serial.print(F("%  Temperature: "));
   Serial.print(celcius);
@@ -230,11 +312,11 @@ void THSensor(){
   Serial.print(heatIndexC);
   Serial.print(F("°C "));
   Serial.print(heatIndexF);
-  Serial.println(F("°F"));
+  Serial.println(F("°F"));*/
   
 }
 
-void SoilSensor(){
+void GetSoilMoistureSensorData(){
 
   //Do this for both soil moisture sensors and pairs of LEDs
   for(int i = 0; i < SOIL_SENSOR_AMT; i++){
@@ -243,23 +325,22 @@ void SoilSensor(){
     Serial.println(moistureValue);
   
     //If there is a difference
-    if (abs(validSensorReadings[i] - moistureValue) > 10) {
-      validSensorReadings[i] = moistureValue;
+    if (abs(validSoilSensorReadings[i] - moistureValue) > 10) {
+      validSoilSensorReadings[i] = moistureValue;
     }
     
-    sensorResults[i] = map(validSensorReadings[i], wetProbe, dryProbe, 0, 4);  // scale analog input to a smaller range for wet to dry
+    soilSensorResults[i] = map(validSoilSensorReadings[i], wetProbe, dryProbe, 0, 4);  // scale analog input to a smaller range for wet to dry
   
-    //Output values to Serial Log
-    Serial.print(F("Sensor  "));
+    /*Serial.print(F("Sensor  "));
     Serial.print(i);
     Serial.print(F(": "));
-    DisplaySoilSensorResult(sensorResults[i]);
+    DisplaySoilSensorResult(soilSensorResults[i]);*/
 
   }
   
 }
 
-void DisplaySoilSensorResult(int result){
+/*void DisplaySoilSensorResult(int result){
   
   // display the correct soil moisture level on the display
   // lower voltages represent more wet levels
@@ -278,6 +359,30 @@ void DisplaySoilSensorResult(int result){
       break;
     case 4:    // same as case 3, due to how map works.
       Serial.println(F("Dry"));
+      break;
+  }
+
+}*/
+
+void DisplaySoilSensorResultOnScreen(int result){
+  
+  // display the correct soil moisture level on the display
+  // lower voltages represent more wet levels
+  switch (result) {
+    case 0:
+      tft.println(F("Wet "));
+      break;
+    case 1:
+      tft.println(F("Damp"));
+      break;
+    case 2:
+      tft.println(F("Moist"));
+      break;
+    case 3:
+      tft.println(F("Dry "));
+      break;
+    case 4:    // same as case 3, due to how map works.
+      tft.println(F("Dry "));
       break;
   }
 
