@@ -45,6 +45,10 @@ Some code copied from:
   https://github.com/adafruit/TFTLCD-Library
   Code by: Adafruit
 
+  Bitmap image drawing code
+  https://www.electronics-lab.com/project/display-custom-bitmap-graphics-on-an-arduino-touch-screen-and-other-arduino-compatible-displays/
+  Code by: Nick Koumaris
+
 Modified by: Matthew Hamilton
 Date Modified: Nov.10, 2019
 */
@@ -53,6 +57,13 @@ Date Modified: Nov.10, 2019
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_TFTLCD.h> // Hardware-specific library
 #include <TouchScreen.h>
+
+//BMP Images
+extern uint8_t soilMoistureMeterBackground[];
+extern uint8_t soilMoistureMeterWet[];
+extern uint8_t soilMoistureMeterMoist[];
+extern uint8_t soilMoistureMeterDamp[];
+extern uint8_t soilMoistureMeterDry[];
 
 #if defined(__SAM3X8E__)
     #undef __FlashStringHelper::F(string_literal)
@@ -91,6 +102,10 @@ TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 #define YELLOW  0xFFE0
 #define WHITE   0xFFFF
 
+#define PLANT_GREEN 0x0DE9
+#define WATER 0x35FF
+#define VASE_BACKGROUND 0xBBC1
+
 Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 
 #define BOXSIZE 40
@@ -103,6 +118,7 @@ const int SOIL_SENSOR_AMT = 2;
 const int SOIL_SENSOR_PINS[] = {A6, A7};  // soil moisture sensor pins
 int validSoilSensorReadings[] = {0, 0};           // valid sensor analog reading to record
 int soilSensorResults[] = {0, 0};                 // scaled sensor data [0..3] = [wet, damp, moist, dry]
+int previousSoilSensorResult = -1;
 
 const int wetProbe      = 300;                // wet readings are around 1.5v or analog input value ~300
 const int dryProbe      = 620;                // dry readings are around 3v or analog input value ~620
@@ -183,7 +199,7 @@ void SetupTouchscreen(){
   tft.setRotation(2);
 
   //Screen background color
-  tft.fillScreen(BLACK);
+  tft.fillScreen(WHITE);
   
 }
 
@@ -198,28 +214,30 @@ void loop() {
 
 void DisplayDataOnTouchScreen(){
 
-  tft.setCursor(0, 0);
-  tft.setTextColor(BLUE, BLACK);
+  tft.setCursor(50, 235);
+  tft.setTextColor(WATER, WHITE);
   tft.setTextSize(2);
   DisplaySoilMoistureData();
-  tft.println("\n");
-  tft.setTextColor(WHITE, BLACK);
+  
+  tft.setCursor(20, 20);
+  tft.setTextColor(PLANT_GREEN, WHITE);
   DisplayHumidityData();
+  tft.setCursor(20, 40);
   DisplayTempData();
   
 }
 
 void DisplaySoilMoistureData(){
 
-  tft.println("Moisture Sensors: ");
+  tft.print(F("Plant "));
+  tft.print(0 + 1);
+  tft.print(F(": "));
 
-  for(int i = 0; i < SOIL_SENSOR_AMT; i++){
-  
-    //Output values to Serial Log
-    tft.print(F("Sensor  "));
-    tft.print(i + 1);
-    tft.print(F(": "));
-    DisplaySoilSensorResultOnScreen(soilSensorResults[i]);
+  if(previousSoilSensorResult != soilSensorResults[0]){
+    
+    drawBitmap(50, 75, soilMoistureMeterBackground, 150, 150, VASE_BACKGROUND);
+    previousSoilSensorResult = soilSensorResults[0];
+    DisplaySoilSensorResultOnScreen(soilSensorResults[0]);
 
   }
   
@@ -227,7 +245,7 @@ void DisplaySoilMoistureData(){
 
 void DisplayTempData(){
 
-  tft.print("Temperature: ");
+  tft.print("Temp:  ");
   DisplayCelcius();
   //DisplayFahrenheit();
   
@@ -237,7 +255,7 @@ void DisplayCelcius(){
 
   tft.print(celcius);
   tft.print((char)247); //Degrees symbol
-  tft.println("C ");
+  tft.println("C");
   
 }
 
@@ -251,9 +269,9 @@ void DisplayFahrenheit(){
 
 void DisplayHumidityData(){
 
-  tft.print("Humidity: ");
+  tft.print("Humid: ");
   tft.print(humidity);
-  tft.println("% ");
+  tft.print("% ");
   
 }
 
@@ -262,7 +280,7 @@ void DisplayHeatIndexData(){
   tft.print("Heat index: ");
   tft.print(heatIndexC);
   tft.print((char)247); //Degrees symbol
-  tft.println("C ");
+  tft.println("C");
   tft.print(heatIndexF);
   tft.print((char)247); //Degrees symbol
   tft.println("F");
@@ -370,20 +388,38 @@ void DisplaySoilSensorResultOnScreen(int result){
   // lower voltages represent more wet levels
   switch (result) {
     case 0:
-      tft.println(F("Wet "));
+      tft.println(F("Wet  "));
+      drawBitmap(50, 75, soilMoistureMeterWet, 150, 150, WATER);
       break;
     case 1:
-      tft.println(F("Damp"));
+      tft.println(F("Damp "));
+      drawBitmap(50, 75, soilMoistureMeterDamp, 150, 150, WATER);
       break;
     case 2:
       tft.println(F("Moist"));
+      drawBitmap(50, 75, soilMoistureMeterMoist, 150, 150, WATER);
       break;
     case 3:
-      tft.println(F("Dry "));
+      tft.println(F("Dry  "));
+      drawBitmap(50, 75, soilMoistureMeterDry, 150, 150, WATER);
       break;
     case 4:    // same as case 3, due to how map works.
-      tft.println(F("Dry "));
+      tft.println(F("Dry  "));
+      drawBitmap(50, 75, soilMoistureMeterDry, 150, 150, WATER);
       break;
   }
 
+}
+
+void drawBitmap(int16_t x, int16_t y,
+ const uint8_t *bitmap, int16_t w, int16_t h, uint16_t color) {
+  int16_t i, j, byteWidth = (w + 7) / 8;
+  uint8_t byte;
+  for(j=0; j<h; j++) {
+    for(i=0; i<w; i++) {
+      if(i & 7) byte <<= 1;
+      else      byte   = pgm_read_byte(bitmap + j * byteWidth + i / 8);
+      if(byte & 0x80) tft.drawPixel(x+i, y+j, color);
+    }
+  }
 }
