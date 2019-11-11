@@ -156,7 +156,10 @@ float humidity, celcius, fahrenheit, heatIndexC, heatIndexF;
 #include <Servo.h>
 
 #define SERVO_PIN 3
-int angle = 10;
+int angle = 0;
+int totalWateringTime = 5000;
+unsigned long wateringStartTime = 0;
+bool wateringInProgress = false;
 
 Servo servo;
 
@@ -169,7 +172,7 @@ void setup() {
   SetupTouchscreen();
 
   //Setup servo
-  //servo.attach(SERVO_PIN);
+  servo.attach(SERVO_PIN);
 
   //Setup temp & humidity sensor
   dht.begin();
@@ -218,12 +221,12 @@ void SetupTouchscreen(){
 }
 
 void loop() {
-
+    
   GetSoilMoistureSensorData();
   GetTHSensorData();
-  //TestServo();
   DisplayDataOnTouchScreen();
   DetectTouch();
+  AutoWaterWithServo();
 
 }
 
@@ -389,20 +392,41 @@ void DisplayHeatIndexData(){
   
 }
 
-void TestServo(){
+void AutoWaterWithServo(){
+  Serial.println(soilSensorResults[currentPlant]);
+  //If Dry or currently watering
+  if((soilSensorResults[currentPlant] >= 3) || wateringInProgress){
 
-  // scan from 0 to 180 degrees
-  for(angle = 10; angle < 180; angle++)  
-  {                                  
-    servo.write(angle);               
-    delay(15);                   
-  } 
-  // now scan back from 180 to 0 degrees
-  for(angle = 180; angle > 10; angle--)    
-  {                                
-    servo.write(angle);           
-    delay(15);       
-  } 
+    //If just started watering
+    if(wateringInProgress == false){
+
+      wateringStartTime = millis();
+      wateringInProgress = true;
+
+      //Tilt the servo to 60 (tip the cup to water the plant)
+      for(angle = 0; angle < 120; angle++)  
+      {                                  
+        servo.write(angle);               
+        delay(15);                   
+      } 
+      
+    }
+
+    //If watering time is up
+    if(millis() > (wateringStartTime + totalWateringTime)){
+      
+        // Reset the servo to 0 (tilt the cup back upright)
+        for(angle = 120; angle > 0; angle--)    
+        {                                
+          servo.write(angle);           
+          delay(15);       
+        }
+
+        wateringInProgress = false;
+
+    }
+    
+  }
   
 }
 
