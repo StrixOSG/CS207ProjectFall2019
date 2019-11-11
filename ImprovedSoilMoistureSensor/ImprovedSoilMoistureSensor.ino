@@ -49,11 +49,16 @@ Some code copied from:
   https://www.electronics-lab.com/project/display-custom-bitmap-graphics-on-an-arduino-touch-screen-and-other-arduino-compatible-displays/
   Code by: Nick Koumaris
 
+  Button code
+  https://learn.adafruit.com/arduin-o-phone-arduino-powered-diy-cellphone/arduin-o-phone-sketch
+  Code by: Adafruit
+
 Modified by: Matthew Hamilton
 Date Modified: Nov.10, 2019
 */
 
 /////////////////////   BEGIN TOUCHSCREEN   /////////////////////////////////////////
+#include <Wire.h>
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_TFTLCD.h> // Hardware-specific library
 #include <TouchScreen.h>
@@ -79,6 +84,9 @@ extern uint8_t soilMoistureMeterDry[];
 #define TS_MINY 120
 #define TS_MAXX 920
 #define TS_MAXY 940
+
+#define MINPRESSURE 10
+#define MAXPRESSURE 1000
 
 // For better pressure precision, we need to know the resistance
 // between X+ and X- Use any multimeter to read it
@@ -110,15 +118,20 @@ Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 
 #define BOXSIZE 40
 
+char buttonLabels[2][15] = {"Next","Previous"};
+uint16_t buttonColors[2] = {WATER, WATER};
+Adafruit_GFX_Button buttons[2];
+
 /////////////////////   END TOUCHSCREEN   ///////////////////////////////////////////
 
 /////////////////////   BEGIN SOIL MOISTURE SENSORS   ///////////////////////////////
 
-const int SOIL_SENSOR_AMT = 2;
 const int SOIL_SENSOR_PINS[] = {A6, A7};  // soil moisture sensor pins
+const int MAX_PLANTS = 2;
 int validSoilSensorReadings[] = {0, 0};           // valid sensor analog reading to record
 int soilSensorResults[] = {0, 0};                 // scaled sensor data [0..3] = [wet, damp, moist, dry]
 int previousSoilSensorResult = -1;
+int currentPlant = 0;
 
 const int wetProbe      = 300;                // wet readings are around 1.5v or analog input value ~300
 const int dryProbe      = 620;                // dry readings are around 3v or analog input value ~620
@@ -165,7 +178,6 @@ void setup() {
 
 void SetupTouchscreen(){
 
-  //Clear the touchscreen display
   tft.reset();
 
   uint16_t identifier = tft.readID();
@@ -200,6 +212,8 @@ void SetupTouchscreen(){
 
   //Screen background color
   tft.fillScreen(WHITE);
+
+  CreateButtons();
   
 }
 
@@ -209,6 +223,87 @@ void loop() {
   GetTHSensorData();
   //TestServo();
   DisplayDataOnTouchScreen();
+  DetectTouch();
+
+}
+
+void CreateButtons(){
+  
+  if(currentPlant < (MAX_PLANTS - 1)){
+    
+    //Next plant
+    //initButton(Touchscreen, X, Y, Width, Height, outline, fill, text color, text, text size)
+    buttons[0].initButton(&tft, 175, 300, 100, 30, WHITE, buttonColors[0], WHITE, buttonLabels[0], 1);
+    buttons[0].drawButton();
+
+  }
+
+  if(currentPlant > 0){
+    
+    //Previous plant
+    buttons[1].initButton(&tft, 75, 300, 100, 30, WHITE, buttonColors[1], WHITE, buttonLabels[1], 1);
+    buttons[1].drawButton();
+
+  }
+  
+}
+
+void DetectTouch(){
+
+  TSPoint point = ts.getPoint();
+  
+  pinMode(XM, OUTPUT);
+  pinMode(YP, OUTPUT);
+
+  //If touch has been detected
+  if(point.z > MINPRESSURE && point.z < MAXPRESSURE){
+
+      // scale from 0->1023 to tft.width
+      point.x = map(point.x, TS_MINX, TS_MAXX, 0, tft.width());
+      point.y = map(point.y, TS_MINY, TS_MAXY, 0, tft.height());
+
+      Serial.print("X: ");
+      Serial.println(point.x);
+      Serial.print("Y: ");
+      Serial.println(point.y);
+      
+      //Detect if button pressed
+      for (int i = 0; i < 2; i++) {
+
+        if(buttons[i].contains(point.x, point.y)) {
+   
+            //Next plant
+           if(i == 0){
+
+              if(currentPlant < (MAX_PLANTS - 1)){
+            
+                currentPlant++;
+                ResetTouchScreen();
+                CreateButtons();
+                Serial.println(currentPlant);
+
+              }
+            
+           }
+           //Previous plant
+           else if(i == 1){
+
+              if(currentPlant > 0){
+
+                currentPlant--;
+                ResetTouchScreen();
+                CreateButtons();
+                Serial.println(currentPlant);
+                
+              }
+            
+           }
+          
+        }
+      
+      }
+      
+  }
 
 }
 
@@ -230,16 +325,23 @@ void DisplayDataOnTouchScreen(){
 void DisplaySoilMoistureData(){
 
   tft.print(F("Plant "));
-  tft.print(0 + 1);
+  tft.print(currentPlant + 1);
   tft.print(F(": "));
 
-  if(previousSoilSensorResult != soilSensorResults[0]){
+  if(previousSoilSensorResult != soilSensorResults[currentPlant]){
     
     drawBitmap(50, 75, soilMoistureMeterBackground, 150, 150, VASE_BACKGROUND);
-    previousSoilSensorResult = soilSensorResults[0];
-    DisplaySoilSensorResultOnScreen(soilSensorResults[0]);
+    previousSoilSensorResult = soilSensorResults[currentPlant];
+    DisplaySoilSensorResultOnScreen(soilSensorResults[currentPlant]);
 
   }
+  
+}
+
+void ResetTouchScreen(){
+
+  tft.fillScreen(WHITE);
+  previousSoilSensorResult = -1;
   
 }
 
@@ -337,10 +439,10 @@ void GetTHSensorData(){
 void GetSoilMoistureSensorData(){
 
   //Do this for both soil moisture sensors and pairs of LEDs
-  for(int i = 0; i < SOIL_SENSOR_AMT; i++){
+  for(int i = 0; i < MAX_PLANTS; i++){
 
     int moistureValue = analogRead(SOIL_SENSOR_PINS[i]);
-    Serial.println(moistureValue);
+    //Serial.println(moistureValue);
   
     //If there is a difference
     if (abs(validSoilSensorReadings[i] - moistureValue) > 10) {
