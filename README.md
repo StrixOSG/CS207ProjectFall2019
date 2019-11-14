@@ -7,5 +7,5 @@ Repository Contents
 * **/Bitmap Images** - Contains the .BMP files that were converted to code and used in the project and .psd (Photoshop CS6) files have been included for easy of modification if you desire to do so
 * **/Hardware Diagrams** - .fzz (Fritzing files) and .jpg's that show the hardware and how it was wired
 * **/Source Code** - Includes 2 folders, the original project that was built first as a test and the improved project
-* * **/Source Code/ImprovedSoilMoistureSensor** - Contains the .cpp and .c files needed to run the improved project
-* * **/Source Code/OriginalSoilMoistureSensor** - Contains the .cpp and .c files needed to run the original project
+  * **/Source Code/ImprovedSoilMoistureSensor** - Contains the .cpp and .c files needed to run the improved project
+  * **/Source Code/OriginalSoilMoistureSensor** - Contains the .cpp and .c files needed to run the original project
