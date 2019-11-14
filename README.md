@@ -1,6 +1,6 @@
 # Improved Soil Moisture Sensor[v1.0]
 
-This project aims at making the soil moisture sensor more practical (not necessarily cheaper) than the original soil moisture sensor project that has been done many times with a few LED indicators. It has been improved by replacing the LEDs with a 3.2" touchscreen display that can switch between plants depedning on the amount of soil moisture sensors connected. Additionally, it can display the approximate temperature and humidity of the room as well as auto-water your plant by tipping over a small cup of water when attached to the servo. The touchscreen displays the temperature, humidity, and current soil moisture level of the plants, indicated by the 4 status' Wet, Damp, Moist, and Dry and an image of a plant that becomes more or less blue depending on the status. 
+This project aims at making the soil moisture sensor project more practical (not necessarily cheaper) than the original that has been done many times with a few LED indicators. To try and improve it, the LEDs are replaced by a 3.2" touchscreen display that can switch between plants depending on the amount of soil moisture sensors connected. Additionally, it can display the approximate temperature and humidity of the room as well as auto-water your plant by tipping over a small cup of water when attached to the servo. The touchscreen displays the temperature, humidity, and current soil moisture level of the plants, indicated by the 4 status' Wet, Damp, Moist, and Dry and an image of a plant that becomes more or less blue depending on the status. 
 
 Repository Contents
 ============
@@ -9,3 +9,19 @@ Repository Contents
 * **/Source Code** - Includes 2 folders, the original project that was built first as a test and the improved project
   * **/Source Code/ImprovedSoilMoistureSensor** - Contains the .cpp and .c files needed to run the improved project
   * **/Source Code/OriginalSoilMoistureSensor** - Contains the .cpp and .c files needed to run the original project
+
+Requirements and Materials
+============
+
+Build Instructions
+==================
+
+Usage
+=====
+
+Team
+=====
+Mattthew Hamilton - I'm the only one on the team.
+
+Credits
+=======
