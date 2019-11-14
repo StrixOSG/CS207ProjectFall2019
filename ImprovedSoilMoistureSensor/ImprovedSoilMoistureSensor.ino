@@ -18,7 +18,7 @@ Parts:
 Connections: 
 - Touchscreen (8-bit mode):
     D0,XP to digital pin 22
-    D1,XM to digital pin 23
+    D1,YM to digital pin 23
     D2 to digital pin 24
     D3 to digital pin 25
     D4 to digital pin 26
