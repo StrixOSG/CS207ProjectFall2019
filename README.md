@@ -28,7 +28,7 @@ Materials
 **Materials In Common:**
 * Several Jumper Wires (20 - 40)
 * Breadboard
-* 2 x [Capacitive Soil Moisture Sensors v1.2] (https://www.amazon.ca/gp/product/B07H3P1NRM/ref=ppx_yo_dt_b_asin_title_o04_s00?ie=UTF8&psc=1)
+* 2 x [Capacitive Soil Moisture Sensors v1.2](https://www.amazon.ca/gp/product/B07H3P1NRM/ref=ppx_yo_dt_b_asin_title_o04_s00?ie=UTF8&psc=1)
 
 I bought a [ELEGOO UNO Project Super Starter Kit](https://www.amazon.ca/Elegoo-Project-Starter-Tutorial-Arduino/dp/B01D8KOZF4), which contained a lot of the components such as the Jumper Wires, Breadboard, DHT11, SG90 Micro Servo, Resistors, UNO R3, and LEDs.
 
