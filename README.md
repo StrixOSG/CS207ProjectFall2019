@@ -73,14 +73,54 @@ Now we get into the improvements. Like I mentioned in the Original Project's bui
   * Note: One problem encountered was that the pins weren't soldered well enough, which caused some issues when testing if the touchscreen was connected and working.
 
 <p align="center">
- <img src="https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/img/Soldered%208-bit%20Side.JPG" width="480">
+ <img src="https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/README%20Images/Soldered%208-bit%20Side.JPG" width="480">
 </p>
 
 * Next, the servo needs 3 male header pins.
 * Lastly, attach a servo attachment to a red solo cup. I suggest zip ties and glue to ensure that the attachment stays in-place, so it remains securely attached to the cup while being tipped.
 
 <p align="center">
- <img src="https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/img/Cup%20With%20Servo%20Attachment.jpg" width="320">
+ <img src="https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/README%20Images/Cup%20With%20Servo%20Attachment.jpg" width="320">
+</p>
+
+#### Wiring:
+* There isn't anything special with the wiring, except where the pins go. Just in case the Fritzing diagrams below aren't clear enough to follow here's the pins:
+
+* Touchscreen (8-bit mode):
+    * D0,XP to digital pin 22
+    * D1,YM to digital pin 23
+    * D2 to digital pin 24
+    * D3 to digital pin 25
+    * D4 to digital pin 26
+    * D5 to digital pin 27
+    * D6 to digital pin 28
+    * D7 to digital pin 29
+    * C/D,YP to analog pin 3
+    * CS,XM to analog pin 2
+    * WR to analog pin 1
+    * RD to analog pin 0
+    * RST to reset pin
+    
+    * Soil Moisture Sensors to anlog pins 6 and 7
+    * Temp & Humidity Sensor to digital pin 2
+    * Servo to digital pin 3
+
+* WARNING: Adafruit's tutorial states that the RST Pin can be A4 or another pin, but in my case this caused the touchscreen to not be read properly, so I connected it to the reset pin on the Mega.
+* The XP, YM, YP, XM are the touchscreen's resistive sensor pins (detects touch) and they are to be connected to D0, D1, C/D, and CS respectively, so they all go to the same pins, 22, 23, A3, and A2 respectively.
+* The soil moisture sensor, we setup in the original project, it is the same except which analog pins it connects to. 
+* The servo's red wire goes to 5v, and black to GND. 
+* The DHT11 (temp & humidity) sensor can be either 4 or 3 pins, if it does have 4 (unlike the one used in the project) then ignore one of the pins (search for your sensors pin layout to determine which pin this is). On the 3 pin sensor for this project, the ground is the right pin, middle is the data pin, and the left is the ground.
+
+**Breadboard Diagram**
+
+<p align="center">
+ <img src="https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/Hardware%20Diagrams/ImprovedSoilMoistureSensorBreadboard.jpg" width="480">
+</p>
+
+**Schematic Diagram**
+
+<p align="center">
+ <img src="https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/Hardware%20Diagrams/ImprovedSoilMoistureSensorSchematic.jpg" width="480">
 </p>
 
 Usage
