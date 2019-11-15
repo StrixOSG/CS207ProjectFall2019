@@ -44,6 +44,7 @@ None yay!
 * [Adafruit TFTLCD](https://github.com/adafruit/TFTLCD-Library)
 * [Adafruit Touchscreen](https://github.com/adafruit/Adafruit_TouchScreen)
 * [Adafruit DHT](https://github.com/adafruit/DHT-sensor-library)
+
 **Software:**
   * [Img2Code](https://github.com/ehubin/Adafruit-GFX-Library/tree/master/Img2Code) - Adafruit Java Application that allows you to convert from a BMP image to code.
     * Resource on how to use it - [Electronics Lab Tutorial](https://www.electronics-lab.com/project/display-custom-bitmap-graphics-on-an-arduino-touch-screen-and-other-arduino-compatible-displays/)
