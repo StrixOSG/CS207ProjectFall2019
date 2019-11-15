@@ -19,7 +19,7 @@ Connections:
 - Soil moisture sensors on pins A0 and A1
 
 Some code copied from: 
-https://github.com/GadgetReboot/Arduino/blob/master/Uno/SSD1306_Soil_Meter/SSD1306_Soil_Meter.in
+https://github.com/GadgetReboot/Arduino/blob/master/Uno/SSD1306_Soil_Meter/SSD1306_Soil_Meter.ino
 Code by GitHub user: GadgetReboot
 Date Created: Sept.6, 2018
 
