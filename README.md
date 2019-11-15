@@ -77,8 +77,11 @@ Now we get into the improvements. Like I mentioned in the Original Project's bui
 [Soldered 8-bit Side]: https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/img/Soldered%208-bit%20Side.JPG "Soldered 8-bit Side"
 
 * Next, the servo needs 3 male header pins.
-* Lastly, attach a servo attachment to a red solo cup
-  
+* Lastly, attach a servo attachment to a red solo cup. I suggest zip ties and glue to ensure that the attachment stays in-place, so it remains securely attached to the cup while being tipped.
+
+![Cup with Servo Attachment][Cup with Servo Attachment]
+
+[Cup with Servo Attachment]: https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/img/Cup%20With%20Servo%20Attachment.jpg "Cup with Servo Attachment"
 
 Usage
 =====
