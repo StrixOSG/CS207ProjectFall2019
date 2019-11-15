@@ -68,8 +68,14 @@ For this project, you can use an UNO or a Mega. Fair warning that this project d
 ### Improved Project:
 Now we get into the improvements. Like I mentioned in the Original Project's build instructions, almost everything changes except that we use the Mega and Soil Moisture Sensors.
 
-#### Part Setup
-* The first step, is to solder on some male header pins to the 8-bit side of the 3.2" TFT Touchscreen. Be careful that it's not the SPI (Serial Peripheral Interface) side. Adafruit has great detailed information about the differences between the two, but essentially it comes down to speed and how many pins you have. Since we have the Mega, we don't have to worry about using more pins so 8-bit mode is what is used for this project, but SPI uses less and it's 2 - 4 times slower than 8-bit mode at updating the touchscreen display.
+#### Part Setup & Prep Work:
+* The first step, is to solder on some male header pins to the 8-bit side of the 3.2" TFT Touchscreen. Be careful that it's not the SPI (Serial Peripheral Interface) side. [Adafruit](https://learn.adafruit.com/adafruit-2-dot-8-color-tft-touchscreen-breakout-v2/pinouts) has great detailed information about the differences between the two, but essentially it comes down to speed and how many pins you have. Since we have the Mega, we don't have to worry about using more pins so 8-bit mode is what is used for this project. SPI uses less pins, but it's 2 - 4 times slower than 8-bit mode at updating the touchscreen display.
+  * Note: One problem encountered was that the pins weren't soldered well enough, which caused some issues when testing if the touchscreen was connected and working.
+![Soldered 8-bit Side][Soldered 8-bit Side]
+[Soldered 8-bit Side]: https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/img/Soldered%208-bit%20Side.JPG "Soldered 8-bit Side"
+* Next, the servo needs 3 male header pins.
+* Lastly, attach a servo attachment to a red solo cup
+  
 
 Usage
 =====
