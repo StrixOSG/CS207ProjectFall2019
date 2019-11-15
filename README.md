@@ -1,4 +1,4 @@
-# Improved Soil Moisture Sensor[v1.0]
+# Improved Soil Moisture Sensor [v1.0]
 
 This project aims at making the soil moisture sensor project more practical (not necessarily cheaper) than the original that has been done many times with a few LED indicators. To try and improve it, the LEDs are replaced by a 3.2" touchscreen display that can switch between plants depending on the amount of soil moisture sensors connected. Additionally, it can display the approximate temperature and humidity of the room as well as auto-water your plant by tipping over a small cup of water when attached to the servo. The touchscreen displays the temperature, humidity, and current soil moisture level of the plants, indicated by the 4 status' Wet, Damp, Moist, and Dry and an image of a plant that becomes more or less blue depending on the status. 
 
@@ -13,22 +13,24 @@ Repository Contents
 Materials
 =========
 **Original Project:**
-* 1 x Arduino UNO
+* 1 x [Arduino UNO R3](https://store.arduino.cc/usa/arduino-uno-rev3)
 * 4 x 220ohm Resistors
-* 4 LEDs
+* 4 x LEDs
 
 **Improved Project:**
-* 1 x 3.2” TFT LCD with Touchscreen Breakout Board w/microSD socket
+* 1 x [3.2” TFT LCD with Touchscreen Breakout Board w/microSD socket](https://www.adafruit.com/product/1743)
 * 1 x SG90 Micro Servo
-* 1 x Small Plastic Cup
-* 1 x Servo Attachment (to tip the cup and not spill water everywhere)
+* 1 x Small Plastic Cup (I just used a smaller than normal red solo cup)
+* 1 x Servo Attachment (To tip the cup and not spill water everywhere)
 * 1 x Elegoo MEGA 2560 R3 (More pins than the UNO)
 * 1 x DHT11 (Temperature & Humidity Sensor)
 
 **Materials In Common:**
 * Several Jumper Wires (20 - 40)
 * Breadboard
-* 2 x Capacitive Soil Moisture Sensors v1.2
+* 2 x [Capacitive Soil Moisture Sensors v1.2] (https://www.amazon.ca/gp/product/B07H3P1NRM/ref=ppx_yo_dt_b_asin_title_o04_s00?ie=UTF8&psc=1)
+
+I bought a [ELEGOO UNO Project Super Starter Kit](https://www.amazon.ca/Elegoo-Project-Starter-Tutorial-Arduino/dp/B01D8KOZF4), which contained a lot of the components such as the Jumper Wires, Breadboard, DHT11, SG90 Micro Servo, Resistors, UNO R3, and LEDs.
 
 Requirements
 ============
