@@ -125,6 +125,21 @@ Now we get into the improvements. Like I mentioned in the Original Project's bui
 
 Usage
 =====
+First step is to ensure that everything is wired and built properly.
+
+### Original Project:
+ 1. Download the original soil moisture sensor project folder.
+ 2. Open it in Arduino and run it on the device.
+ 3. Place soil moisture sensors in plants. Or grasp one of the soil moisture sensors in your hand and eventually the green LED should turn on, because your hand is damp or moist instead of dry when its not in anything.
+
+### Improved Project:
+ 1. Download the improved soil moisture sensor project folder.
+ 2. Open it in Arduino and run it on the device.
+ 3. If the servo is connected to the cup then it should immediately start tipping it back and forth, if the soil moisture sensors are dry. To prevent this, either hold them or place them in the plants non-dry soil or a cup of water (or disconnect the servo).
+ 4. Temperature, Humidity, and the visual state (partially or fully blue plant image) and text state (Wet, Damp, Moist, Dry) of plant  1's soil moisture should be displayed.
+ 5. Tap the next button to switch to plant 2 (the other soil moisture sensor), and it's state should be displayed.
+ 6. The next button should disappear, and previous button should be on the other side of the screen.
+ 7. Switch back and forth and monitor your plants water levels, and the temperature and humidity of the room :)
 
 Team
 =====
