@@ -15,14 +15,14 @@ Materials
 **Original Project:**
 * 1 x [Arduino UNO R3](https://store.arduino.cc/usa/arduino-uno-rev3)
 * 4 x 220ohm Resistors
-* 4 x LEDs
+* 4 x LEDs (2 Green and 2 Red, or some way to differentiate Wet or Dry)
 
 **Improved Project:**
 * 1 x [3.2” TFT LCD with Touchscreen Breakout Board w/microSD socket](https://www.adafruit.com/product/1743)
 * 1 x SG90 Micro Servo
 * 1 x Small Plastic Cup (I just used a smaller than normal red solo cup)
 * 1 x Servo Attachment (To tip the cup and not spill water everywhere)
-* 1 x [Elegoo MEGA 2560 R3](https://www.amazon.ca/gp/product/B01H4ZLZLQ) (More pins than the UNO. Note: An Arduino instead of an Elegoo will work, it's just more expensive)
+* 1 x [Elegoo MEGA 2560 R3](https://www.amazon.ca/gp/product/B01H4ZLZLQ) (Note: An Arduino instead of an Elegoo will work, it's just more expensive)
 * 1 x DHT11 (Temperature & Humidity Sensor)
 
 **Materials In Common:**
@@ -55,6 +55,14 @@ None yay!
 
 Build Instructions
 ==================
+### Original Project:
+* Wire the negative legs of the green LEDs to digital pins 3 and 5, and the red LEDs to digital pins 2 and 4. 
+* Having some resistors (220ohm) connected to each of the positive legs of the LEDs is a good idea, just so they don't burn out as fast. The other side of the resistor should go to ground.
+* The AOUT (Analog Out) pins on the soil moisture sensors should be connected to pins A0 and A1. Then the VCC's to 5V, and GND's to the GND.
+* More details including diagrams (except for the above specified digital and analog pins to connect to) can be found [here](https://www.elithecomputerguy.com/2019/07/soil-moisture-sensor-led-alert-with-arduino-uno/), where the project was originally obtained from. Code for the idea of splitting the soil moisture values into 4 (Dry, Damp, Moist, and Dry) can be found [here](https://github.com/GadgetReboot/Arduino/blob/master/Uno/SSD1306_Soil_Meter/SSD1306_Soil_Meter.ino)
+
+### Improved Project:
+
 
 Usage
 =====
