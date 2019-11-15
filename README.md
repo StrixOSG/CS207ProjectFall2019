@@ -71,17 +71,13 @@ Now we get into the improvements. Like I mentioned in the Original Project's bui
 #### Part Setup & Prep Work:
 * The first step, is to solder on some male header pins to the 8-bit side of the 3.2" TFT Touchscreen. Be careful that it's not the SPI (Serial Peripheral Interface) side. [Adafruit](https://learn.adafruit.com/adafruit-2-dot-8-color-tft-touchscreen-breakout-v2/pinouts) has great detailed information about the differences between the two, but essentially it comes down to speed and how many pins you have. Since we have the Mega, we don't have to worry about using more pins so 8-bit mode is what is used for this project. SPI uses less pins, but it's 2 - 4 times slower than 8-bit mode at updating the touchscreen display.
   * Note: One problem encountered was that the pins weren't soldered well enough, which caused some issues when testing if the touchscreen was connected and working.
-  
-![Soldered 8-bit Side][Soldered 8-bit Side]
 
-[Soldered 8-bit Side]: https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/img/Soldered%208-bit%20Side.JPG "Soldered 8-bit Side"
+<img src="https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/img/Soldered%208-bit%20Side.JPG" width="480">
 
 * Next, the servo needs 3 male header pins.
 * Lastly, attach a servo attachment to a red solo cup. I suggest zip ties and glue to ensure that the attachment stays in-place, so it remains securely attached to the cup while being tipped.
 
-![Cup with Servo Attachment][Cup with Servo Attachment]
-
-[Cup with Servo Attachment]: https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/img/Cup%20With%20Servo%20Attachment.jpg "Cup with Servo Attachment"
+<img src="https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/img/Cup%20With%20Servo%20Attachment.jpg" width="320">
 
 Usage
 =====
