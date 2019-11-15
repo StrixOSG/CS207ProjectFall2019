@@ -1,5 +1,15 @@
 # Improved Soil Moisture Sensor [v1.0]
 
+<p align="center">
+  <a href="#repository-contents">Repository Contents</a> •
+  <a href="#materials">Materials</a> •
+  <a href="#requirements">Requirements</a> •
+  <a href="#build-instructions">Build Instructions</a> •
+  <a href="#usage">Usage</a> •
+  <a href="#team">Team</a> •
+  <a href="#credits">Credits</a> •
+</p>
+
 This project aims at making the soil moisture sensor project more practical (not necessarily cheaper) than the original that has been done many times with a few LED indicators. To try and improve it, the LEDs are replaced by a 3.2" touchscreen display that can switch between plants depending on the amount of soil moisture sensors connected. Additionally, it can display the approximate temperature and humidity of the room as well as auto-water your plant by tipping over a small cup of water when attached to the servo. The touchscreen displays the temperature, humidity, and current soil moisture level of the plants, indicated by the 4 status' Wet, Damp, Moist, and Dry and an image of a plant that becomes more or less blue depending on the status. 
 
 Repository Contents
@@ -128,12 +138,12 @@ Usage
 First step is to ensure that everything is wired and built properly.
 
 ### Original Project:
- 1. Download the original soil moisture sensor project folder.
+ 1. Download the [original soil moisture sensor project folder](https://github.com/mattiasjahnke/arduino-projects).
  2. Open it in Arduino and run it on the device.
  3. Place soil moisture sensors in plants. Or grasp one of the soil moisture sensors in your hand and eventually the green LED should turn on, because your hand is damp or moist instead of dry when its not in anything.
 
 ### Improved Project:
- 1. Download the improved soil moisture sensor project folder.
+ 1. Download the [improved soil moisture sensor project folder](https://github.com/mattiasjahnke/arduino-projects).
  2. Open it in Arduino and run it on the device.
  3. If the servo is connected to the cup then it should immediately start tipping it back and forth, if the soil moisture sensors are dry. To prevent this, either hold them or place them in the plants non-dry soil or a cup of water (or disconnect the servo).
  4. Temperature, Humidity, and the visual state (partially or fully blue plant image) and text state (Wet, Damp, Moist, Dry) of plant  1's soil moisture should be displayed.
