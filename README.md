@@ -29,8 +29,9 @@ Materials
 * Several Jumper Wires (20 - 40)
 * Breadboard
 * 2 x [Capacitive Soil Moisture Sensors v1.2](https://www.amazon.ca/gp/product/B07H3P1NRM/ref=ppx_yo_dt_b_asin_title_o04_s00?ie=UTF8&psc=1)
+* Several Male Header Pins
 
-I bought a [ELEGOO UNO Project Super Starter Kit](https://www.amazon.ca/Elegoo-Project-Starter-Tutorial-Arduino/dp/B01D8KOZF4), which contained a lot of the components such as the Jumper Wires, Breadboard, DHT11, SG90 Micro Servo, Resistors, UNO R3, and LEDs.
+I bought a [ELEGOO UNO Project Super Starter Kit](https://www.amazon.ca/Elegoo-Project-Starter-Tutorial-Arduino/dp/B01D8KOZF4), which contained a lot of the components such as the Jumper Wires, Breadboard, Header Pins, DHT11, SG90 Micro Servo, Resistors, UNO R3, and LEDs.
 
 Requirements
 ============
@@ -56,13 +57,19 @@ None yay!
 Build Instructions
 ==================
 ### Original Project:
+For this project, you can use an UNO or a Mega. Fair warning that this project does not translate very well to the improved version. The point of setting this project up is to test the Mega, and the Soil Moisture Sensors and establish some simpler code to work off of.
+
+#### Wiring:
 * Wire the negative legs of the green LEDs to digital pins 3 and 5, and the red LEDs to digital pins 2 and 4. 
 * Having some resistors (220ohm) connected to each of the positive legs of the LEDs is a good idea, just so they don't burn out as fast. The other side of the resistor should go to ground.
 * The AOUT (Analog Out) pins on the soil moisture sensors should be connected to pins A0 and A1. Then the VCC's to 5V, and GND's to the GND.
 * More details including diagrams (except for the above specified digital and analog pins to connect to) can be found [here](https://www.elithecomputerguy.com/2019/07/soil-moisture-sensor-led-alert-with-arduino-uno/), where the project was originally obtained from. Code for the idea of splitting the soil moisture values into 4 (Dry, Damp, Moist, and Dry) can be found [here](https://github.com/GadgetReboot/Arduino/blob/master/Uno/SSD1306_Soil_Meter/SSD1306_Soil_Meter.ino)
 
 ### Improved Project:
+Now we get into the improvements. Like I mentioned in the Original Project's build instructions, almost everything changes except that we use the Mega and Soil Moisture Sensors.
 
+#### Part Setup
+* The first step, is to solder on some male header pins to the 8-bit side of the 3.2" TFT Touchscreen. Be careful that it's not the SPI (Serial Peripheral Interface) side. Adafruit has great detailed information about the differences between the two, but essentially it comes down to speed and how many pins you have. Since we have the Mega, we don't have to worry about using more pins so 8-bit mode is what is used for this project, but SPI uses less and it's 2 - 4 times slower than 8-bit mode at updating the touchscreen display.
 
 Usage
 =====
