@@ -22,7 +22,7 @@ Materials
 * 1 x SG90 Micro Servo
 * 1 x Small Plastic Cup (I just used a smaller than normal red solo cup)
 * 1 x Servo Attachment (To tip the cup and not spill water everywhere)
-* 1 x Elegoo MEGA 2560 R3 (More pins than the UNO)
+* 1 x [Elegoo MEGA 2560 R3](https://www.amazon.ca/gp/product/B01H4ZLZLQ) (More pins than the UNO. Note: An Arduino instead of an Elegoo will work, it's just more expensive)
 * 1 x DHT11 (Temperature & Humidity Sensor)
 
 **Materials In Common:**
