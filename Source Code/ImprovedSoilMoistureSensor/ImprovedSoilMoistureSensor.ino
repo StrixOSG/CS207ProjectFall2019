@@ -118,9 +118,10 @@ Adafruit_TFTLCD tft(LCD_CS, LCD_CD, LCD_WR, LCD_RD, LCD_RESET);
 
 #define BOXSIZE 40
 
-char buttonLabels[2][15] = {"Next","Previous"};
-uint16_t buttonColors[2] = {WATER, WATER};
-Adafruit_GFX_Button buttons[2];
+#define TOTAL_BUTTONS 6
+char buttonLabels[TOTAL_BUTTONS][15] = {"Next","Previous","Very Low","Low","Moderate","High"};
+uint16_t buttonColors[2] = {WATER, GREEN};
+Adafruit_GFX_Button buttons[TOTAL_BUTTONS];
 
 /////////////////////   END TOUCHSCREEN   ///////////////////////////////////////////
 
@@ -132,6 +133,9 @@ int validSoilSensorReadings[] = {0, 0};           // valid sensor analog reading
 int soilSensorResults[] = {0, 0};                 // scaled sensor data [0..3] = [wet, damp, moist, dry]
 int previousSoilSensorResult = -1;
 int currentPlant = 0;
+
+//Set the default plant moisture setting to Moderate (3)
+int plantMoistureSetting[MAX_PLANTS] = {2, 2};
 
 const int wetProbe      = 300;                // wet readings are around 1.5v or analog input value ~300
 const int dryProbe      = 620;                // dry readings are around 3v or analog input value ~620
@@ -244,10 +248,44 @@ void CreateButtons(){
   if(currentPlant > 0){
     
     //Previous plant
-    buttons[1].initButton(&tft, 75, 300, 100, 30, WHITE, buttonColors[1], WHITE, buttonLabels[1], 1);
+    buttons[1].initButton(&tft, 75, 300, 100, 30, WHITE, buttonColors[0], WHITE, buttonLabels[1], 1);
     buttons[1].drawButton();
 
   }
+
+  //Plant Categories
+  
+  //Very Low Moisture
+  if(plantMoistureSetting[currentPlant] == 0){
+    buttons[2].initButton(&tft, 50, 100, 75, 30, WHITE, buttonColors[1], WHITE, buttonLabels[2], 1);
+  }else{
+    buttons[2].initButton(&tft, 50, 100, 75, 30, WHITE, buttonColors[0], WHITE, buttonLabels[2], 1);
+  }
+  buttons[2].drawButton();
+  
+  //Low Moisture
+  if(plantMoistureSetting[currentPlant] == 1){
+    buttons[3].initButton(&tft, 50, 135, 75, 30, WHITE, buttonColors[1], WHITE, buttonLabels[3], 1);
+  }else{
+    buttons[3].initButton(&tft, 50, 135, 75, 30, WHITE, buttonColors[0], WHITE, buttonLabels[3], 1);
+  }
+  buttons[3].drawButton();
+  
+  //Moderate Moisture
+  if(plantMoistureSetting[currentPlant] == 2){
+    buttons[4].initButton(&tft, 50, 170, 75, 30, WHITE, buttonColors[1], WHITE, buttonLabels[4], 1);
+  }else{
+    buttons[4].initButton(&tft, 50, 170, 75, 30, WHITE, buttonColors[0], WHITE, buttonLabels[4], 1);
+  }
+  buttons[4].drawButton();
+  
+  //High Moisture
+  if(plantMoistureSetting[currentPlant] == 3){
+    buttons[5].initButton(&tft, 50, 205, 75, 30, WHITE, buttonColors[1], WHITE, buttonLabels[5], 1);
+  }else{
+    buttons[5].initButton(&tft, 50, 205, 75, 30, WHITE, buttonColors[0], WHITE, buttonLabels[5], 1);
+  }
+  buttons[5].drawButton();
   
 }
 
@@ -270,49 +308,65 @@ void DetectTouch(){
       Serial.print("Y: ");
       Serial.println(point.y);
       
-      //Detect if button pressed
-      for (int i = 0; i < 2; i++) {
-
+    //Detect if button pressed
+    for (int i = 0; i < TOTAL_BUTTONS; i++) {
+        
         if(buttons[i].contains(point.x, point.y)) {
-   
-            //Next plant
-           if(i == 0){
 
-              if(currentPlant < (MAX_PLANTS - 1)){
-            
-                currentPlant++;
-                ResetTouchScreen();
-                CreateButtons();
-                Serial.println(currentPlant);
-
-              }
-            
-           }
-           //Previous plant
-           else if(i == 1){
-
-              if(currentPlant > 0){
-
-                currentPlant--;
-                ResetTouchScreen();
-                CreateButtons();
-                Serial.println(currentPlant);
-                
-              }
-            
-           }
+           HandleButtons(i);
           
         }
-      
+
       }
       
   }
 
 }
 
+void HandleButtons(int buttonNumber){
+
+  switch(buttonNumber){
+
+    case 0: //Next Plant
+      if(currentPlant < (MAX_PLANTS - 1)){
+    
+        currentPlant++;
+        Serial.println(currentPlant);
+    
+      }
+    break;
+   case 1:  //Previous plant
+      if(currentPlant > 0){
+      
+        currentPlant--;
+        Serial.println(currentPlant);
+        
+      }
+      break;
+    case 2: //Very Low Moisture
+      plantMoistureSetting[currentPlant] = 0;
+      break;
+    case 3: //Low Moisture
+      plantMoistureSetting[currentPlant] = 1;
+      break;
+    case 4: //Moderate Moisture
+      plantMoistureSetting[currentPlant] = 2;
+      break;
+    case 5: //Moderate Moisture
+      plantMoistureSetting[currentPlant] = 3;
+      break;
+      
+  }
+
+  //Some button was tapped so wipe the screen and redraw the buttons
+  ResetTouchScreen();
+  CreateButtons();
+  
+}
+
 void DisplayDataOnTouchScreen(){
 
-  tft.setCursor(50, 235);
+  tft.setCursor(75, 235);
   tft.setTextColor(WATER, WHITE);
   tft.setTextSize(2);
   DisplaySoilMoistureData();
@@ -333,7 +387,7 @@ void DisplaySoilMoistureData(){
 
   if(previousSoilSensorResult != soilSensorResults[currentPlant]){
     
-    drawBitmap(50, 75, soilMoistureMeterBackground, 150, 150, VASE_BACKGROUND);
+    drawBitmap(75, 75, soilMoistureMeterBackground, 150, 150, VASE_BACKGROUND);
     previousSoilSensorResult = soilSensorResults[currentPlant];
     DisplaySoilSensorResultOnScreen(soilSensorResults[currentPlant]);
 
@@ -473,8 +527,9 @@ void GetSoilMoistureSensorData(){
       validSoilSensorReadings[i] = moistureValue;
     }
     
-    soilSensorResults[i] = map(validSoilSensorReadings[i], wetProbe, dryProbe, 0, 4);  // scale analog input to a smaller range for wet to dry
-  
+    soilSensorResults[i] = map(validSoilSensorReadings[i], dryProbe, wetProbe, 0, 100);  // scale analog input to a smaller range for wet to dry
+    Serial.print(F("Sensor 1: "));
+    Serial.println(soilSensorResults[0]);
     /*Serial.print(F("Sensor  "));
     Serial.print(i);
     Serial.print(F(": "));
@@ -512,28 +567,22 @@ void DisplaySoilSensorResultOnScreen(int result){
   
   // display the correct soil moisture level on the display
   // lower voltages represent more wet levels
-  switch (result) {
-    case 0:
+    if(result > 60 && result <= 100){
       tft.println(F("Wet  "));
-      drawBitmap(50, 75, soilMoistureMeterWet, 150, 150, WATER);
-      break;
-    case 1:
+      drawBitmap(75, 75, soilMoistureMeterWet, 150, 150, WATER);
+    }
+    else if(result > 40 && result < 61){
       tft.println(F("Damp "));
-      drawBitmap(50, 75, soilMoistureMeterDamp, 150, 150, WATER);
-      break;
-    case 2:
+      drawBitmap(75, 75, soilMoistureMeterDamp, 150, 150, WATER);
+    }
+    else if(result > 20 && result < 41){
       tft.println(F("Moist"));
-      drawBitmap(50, 75, soilMoistureMeterMoist, 150, 150, WATER);
-      break;
-    case 3:
+      drawBitmap(75, 75, soilMoistureMeterMoist, 150, 150, WATER);
+    }
+    else{
       tft.println(F("Dry  "));
-      drawBitmap(50, 75, soilMoistureMeterDry, 150, 150, WATER);
-      break;
-    case 4:    // same as case 3, due to how map works.
-      tft.println(F("Dry  "));
-      drawBitmap(50, 75, soilMoistureMeterDry, 150, 150, WATER);
-      break;
-  }
+      drawBitmap(75, 75, soilMoistureMeterDry, 150, 150, WATER);
+    }
 
 }
 
