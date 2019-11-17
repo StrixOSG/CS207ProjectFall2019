@@ -10,6 +10,10 @@
   <a href="#credits">Credits</a>
 </p>
 
+<p align="center">
+ <img src="https://github.com/StrixOSG/CS207ProjectFall2019/blob/master/README%20Images/Improved%20Soil%20Moisture%20Sensor.jpg" width="540">
+</p>
+
 This project aims at making the soil moisture sensor project more practical (not necessarily cheaper) than the original that has been done many times with a few LED indicators. To try and improve it, the LEDs are replaced by a 3.2" touchscreen display that can switch between plants depending on the amount of soil moisture sensors connected. Additionally, it can display the approximate temperature and humidity of the room as well as auto-water your plant by tipping over a small cup of water when attached to the servo. The touchscreen displays the temperature, humidity, and current soil moisture level of the plants, indicated by the 4 status' Wet, Damp, Moist, and Dry and an image of a plant that becomes more or less blue depending on the status. 
 
 Repository Contents
