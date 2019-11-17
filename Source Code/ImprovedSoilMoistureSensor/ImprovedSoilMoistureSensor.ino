@@ -62,6 +62,7 @@ Date Modified: Nov.10, 2019
 #include <Adafruit_GFX.h>    // Core graphics library
 #include <Adafruit_TFTLCD.h> // Hardware-specific library
 #include <TouchScreen.h>
+#include <Fonts/TomThumb.h>
 
 //BMP Images
 extern uint8_t soilMoistureMeterBackground[];
@@ -107,8 +108,9 @@ TouchScreen ts = TouchScreen(XP, YP, XM, YM, 300);
 #define GREEN   0x07E0
 #define CYAN    0x07FF
 #define MAGENTA 0xF81F
-#define YELLOW  0xFFE0
+#define YELLOW  0xF7C2
 #define WHITE   0xFFFF
+#define ORANGE 0xFE62
 
 #define PLANT_GREEN 0x0DE9
 #define WATER 0x35FF
@@ -366,11 +368,13 @@ void HandleButtons(int buttonNumber){
 
 void DisplayDataOnTouchScreen(){
 
-  tft.setCursor(75, 235);
-  tft.setTextColor(WATER, WHITE);
   tft.setTextSize(2);
+  tft.setCursor(68, 235);
+  tft.setTextColor(WATER, WHITE);
   DisplaySoilMoistureData();
-  
+
+  tft.setFont();
+  tft.setTextSize(2);
   tft.setCursor(20, 20);
   tft.setTextColor(PLANT_GREEN, WHITE);
   DisplayHumidityData();
@@ -570,18 +574,114 @@ void DisplaySoilSensorResultOnScreen(int result){
     if(result > 60 && result <= 100){
       tft.println(F("Wet  "));
       drawBitmap(75, 75, soilMoistureMeterWet, 150, 150, WATER);
+
+      tft.setCursor(75, 260);
+      tft.fillRect(75, 255, 200, 20, WHITE);
+      tft.setFont(&TomThumb);
+      tft.setTextSize(2);
+      switch(plantMoistureSetting[currentPlant]){
+        case 0:
+          tft.setTextColor(RED, WHITE);
+          tft.println(F("I'm Drownin'"));
+          break;
+        case 1:
+          tft.setTextColor(ORANGE, WHITE);
+          tft.println(F("I'm Starting To Drown"));
+          break;
+        case 2:
+          tft.setTextColor(YELLOW, WHITE);
+          tft.println(F("Tad too Much Water"));
+          break;
+        case 3:
+          tft.setTextColor(GREEN, WHITE);
+          tft.println(F("Ah. Just Right"));
+          break;
+      }
+      
     }
     else if(result > 40 && result < 61){
       tft.println(F("Damp "));
       drawBitmap(75, 75, soilMoistureMeterDamp, 150, 150, WATER);
+
+      tft.setCursor(75, 260);
+      tft.fillRect(75, 255, 200, 20, WHITE);
+      tft.setFont(&TomThumb);
+      tft.setTextSize(2);
+      switch(plantMoistureSetting[currentPlant]){
+        case 0:
+          tft.setTextColor(ORANGE, WHITE);
+          tft.println(F("I'm Starting To Drown"));
+          break;
+        case 1:
+          tft.setTextColor(YELLOW, WHITE);
+          tft.println(F("Tad too Much Water"));
+          break;
+        case 2:
+          tft.setTextColor(GREEN, WHITE);
+          tft.println(F("Ah. Just Right"));
+          break;
+        case 3:
+          tft.setTextColor(YELLOW, WHITE);
+          tft.println(F("Feelin' Thirsty"));
+          break;
+      }
+      
     }
     else if(result > 20 && result < 41){
       tft.println(F("Moist"));
       drawBitmap(75, 75, soilMoistureMeterMoist, 150, 150, WATER);
+
+      tft.setCursor(75, 260);
+      tft.fillRect(75, 255, 200, 20, WHITE);
+      tft.setFont(&TomThumb);
+      tft.setTextSize(2);
+      switch(plantMoistureSetting[currentPlant]){
+        case 0:
+          tft.setTextColor(YELLOW, WHITE);
+          tft.println(F("Tad too Much Water"));
+          break;
+        case 1:
+          tft.setTextColor(GREEN, WHITE);
+          tft.println(F("Ah. Just Right"));
+          break;
+        case 2:
+          tft.setTextColor(YELLOW, WHITE);
+          tft.println(F("Feelin' Thirsty"));
+          break;
+        case 3:
+          tft.setTextColor(ORANGE, WHITE);
+          tft.println(F("I NEED WATER SANDY"));
+          break;
+      }
+      
     }
     else{
       tft.println(F("Dry  "));
       drawBitmap(75, 75, soilMoistureMeterDry, 150, 150, WATER);
+
+      tft.setCursor(75, 260);
+      tft.fillRect(75, 255, 200, 20, WHITE);
+      tft.setFont(&TomThumb);
+      tft.setTextSize(2);
+      switch(plantMoistureSetting[currentPlant]){
+        case 0:
+          tft.setTextColor(GREEN, WHITE);
+          tft.println(F("Ah. Just Right"));
+          break;
+        case 1:
+          tft.setTextColor(YELLOW, WHITE);
+          tft.println(F("Feelin' Thirsty"));
+          break;
+        case 2:          
+          tft.setTextColor(ORANGE, WHITE);
+          tft.println(F("I NEED WATER SANDY"));
+          break;
+        case 3:
+          tft.setTextColor(RED, WHITE);
+          tft.println(F("I NEEEED ITTTT"));
+          break;
+      }
+      
     }
 
 }
