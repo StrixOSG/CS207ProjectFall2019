@@ -109,8 +109,8 @@ Now we get into the improvements. Like I mentioned in the Original Project's bui
     * D5 to digital pin 27
     * D6 to digital pin 28
     * D7 to digital pin 29
-    * C/D,YP to analog pin 3
-    * CS,XM to analog pin 2
+    * CS,YP to analog pin 3
+    * C/D,XM to analog pin 2
     * WR to analog pin 1
     * RD to analog pin 0
     * RST to reset pin
