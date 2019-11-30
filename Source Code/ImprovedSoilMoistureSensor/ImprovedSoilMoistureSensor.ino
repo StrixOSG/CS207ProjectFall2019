@@ -164,8 +164,12 @@ float humidity, celcius, fahrenheit, heatIndexC, heatIndexF;
 #define SERVO_PIN 3
 int angle = 0;
 int totalWateringTime = 5000;
+int wateringBreakTime = 5000;
+unsigned long wateringEndTime = 0;
 unsigned long wateringStartTime = 0;
-bool wateringInProgress = false;
+bool wateringBreak = false;
+bool needsWater = false;
+bool wateringStart = true;
 
 Servo servo;
 
@@ -176,9 +180,6 @@ void setup() {
   Serial.begin(9600);
 
   SetupTouchscreen();
-
-  //Setup servo
-  servo.attach(SERVO_PIN);
 
   //Setup temp & humidity sensor
   dht.begin();
@@ -451,37 +452,54 @@ void DisplayHeatIndexData(){
 }
 
 void AutoWaterWithServo(){
-  Serial.println(soilSensorResults[currentPlant]);
+
   //If Dry or currently watering
-  if((soilSensorResults[currentPlant] >= 3) || wateringInProgress){
+  if(needsWater){
 
-    //If just started watering
-    if(wateringInProgress == false){
+    if(!wateringBreak || (millis() > (wateringEndTime + wateringBreakTime))){
 
-      wateringStartTime = millis();
-      wateringInProgress = true;
+      //If just starting to water
+      if(wateringStart){
+  
+        wateringStartTime = millis();
+        wateringStart = false;
+        wateringBreak = false;
 
-      //Tilt the servo to 60 (tip the cup to water the plant)
-      for(angle = 0; angle < 120; angle++)  
-      {                                  
-        servo.write(angle);               
-        delay(15);                   
-      } 
-      
-    }
-
-    //If watering time is up
-    if(millis() > (wateringStartTime + totalWateringTime)){
-      
-        // Reset the servo to 0 (tilt the cup back upright)
-        for(angle = 120; angle > 0; angle--)    
-        {                                
-          servo.write(angle);           
-          delay(15);       
+        servo.attach(SERVO_PIN);
+  
+        //Tilt the servo to 120 (tip the cup to water the plant)
+        for(;angle < 120; angle++)  
+        {                           
+          servo.write(angle);               
+          delay(15);                   
         }
 
-        wateringInProgress = false;
+        servo.detach();
+        
+      }
+  
+      //If watering time is up
+      if(millis() > (wateringStartTime + totalWateringTime)){
 
+          servo.attach(SERVO_PIN);
+          
+          // Reset the servo to 0 (tilt the cup back upright)
+          for(angle = 120; angle > 0; angle--)    
+          {                                
+            servo.write(angle);           
+            delay(15);       
+          }
+
+          servo.detach();
+          
+          wateringStartTime = 0;
+          wateringEndTime = millis();
+          wateringBreak = true;
+          wateringStart = true;
+          needsWater = false;
+  
+      }
+      
     }
     
   }
@@ -532,40 +550,10 @@ void GetSoilMoistureSensorData(){
     }
     
     soilSensorResults[i] = map(validSoilSensorReadings[i], dryProbe, wetProbe, 0, 100);  // scale analog input to a smaller range for wet to dry
-    Serial.print(F("Sensor 1: "));
-    Serial.println(soilSensorResults[0]);
-    /*Serial.print(F("Sensor  "));
-    Serial.print(i);
-    Serial.print(F(": "));
-    DisplaySoilSensorResult(soilSensorResults[i]);*/
 
   }
   
 }
-
-/*void DisplaySoilSensorResult(int result){
-  
-  // display the correct soil moisture level on the display
-  // lower voltages represent more wet levels
-  switch (result) {
-    case 0:
-      Serial.println(F("Wet"));
-      break;
-    case 1:
-      Serial.println(F("Damp"));
-      break;
-    case 2:
-      Serial.println(F("Moist"));
-      break;
-    case 3:
-      Serial.println(F("Dry"));
-      break;
-    case 4:    // same as case 3, due to how map works.
-      Serial.println(F("Dry"));
-      break;
-  }
-
-}*/
 
 void DisplaySoilSensorResultOnScreen(int result){
   
@@ -651,6 +639,7 @@ void DisplaySoilSensorResultOnScreen(int result){
         case 3:
           tft.setTextColor(ORANGE, WHITE);
           tft.println(F("I NEED WATER SANDY"));
+          needsWater = true;
           break;
       }
       
@@ -675,10 +664,12 @@ void DisplaySoilSensorResultOnScreen(int result){
         case 2:          
           tft.setTextColor(ORANGE, WHITE);
           tft.println(F("I NEED WATER SANDY"));
+          needsWater = true;
           break;
         case 3:
           tft.setTextColor(RED, WHITE);
           tft.println(F("I NEEEED ITTTT"));
+          needsWater = true;
           break;
       }
       
