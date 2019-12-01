@@ -164,7 +164,8 @@ First step is to ensure that everything is wired and built properly.
 
 Video
 =====
-<iframe width="560" height="315" src="https://www.youtube.com/embed/PviWJTjPKCI" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+[![Improved Arduino Soil Moisture Sensor YouTube Video](http://img.youtube.com/vi/PviWJTjPKCI/0.jpg)](http://www.youtube.com/watch?v=PviWJTjPKCI "Improved Arduino Soil Moisture Sensor - CS207 Fall 2019")
 
 Team
 =====
